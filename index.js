@@ -1,11 +1,11 @@
-const { Telegraf } = require("telegraf");
+require("dotenv").config();
+const axios = require("axios");
 const express = require("express");
-const { message } = require("telegraf/filters");
+const { Telegraf } = require("telegraf");
 const { logError } = require("./logger");
 const { text } = require("./controllers/data");
-const axios = require("axios");
+const { message } = require("telegraf/filters");
 
-const dotenv = require("dotenv").config();
 const app = express();
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -19,7 +19,9 @@ bot.telegram.setWebhook(process.env.URL + "/webhook");
 bot.startWebhook("/webhook");
 
 bot.start((ctx) => {
-  ctx.replyWithHTML("<b>Welcome! Send me the country name:</b>\n\ne.g: <code>USA</code>");
+  ctx.replyWithHTML(
+    "<b>Please tell me the name of the country:</b>\n\ne.g: <code>USA</code>"
+  );
 });
 
 bot.on(message("text"), (ctx) => {
