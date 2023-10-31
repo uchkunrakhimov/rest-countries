@@ -8,4 +8,9 @@ cp .env.example .env && \
 npm run serve
 ```
 
+### Requirements
+
+- **node > 18**
+- **npm > 9**
+
 ![Screen](./screen-result.png)
