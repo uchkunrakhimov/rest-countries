@@ -6,36 +6,38 @@ const { message } = require("telegraf/filters");
 const { logError, getText } = require("./controllers");
 
 const app = express();
+const port = process.env.PORT;
+const url = process.env.URL;
+const botToken = process.env.BOT_TOKEN;
+const apiEndpoint = process.env.API;
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 app.use(bot.webhookCallback("/webhook"));
-bot.telegram.setWebhook(process.env.URL + "/webhook");
+bot.telegram.setWebhook(url + "/webhook");
 bot.startWebhook("/webhook");
 
+const startMessage =
+  "<b>Please tell me the name of the country:</b>\n\ne.g: <code>USA</code>";
+
 bot.start((ctx) => {
-  ctx.replyWithHTML(
-    "<b>Please tell me the name of the country:</b>\n\ne.g: <code>USA</code>"
-  );
+  ctx.replyWithHTML(startMessage);
 });
 
-bot.on(message("text"), (ctx) => {
-  if (ctx.message.text.startsWith("/")) {
-    ctx.reply("Bad attempt");
-  } else {
-    axios
-      .get(process.env.API + ctx.message.text)
-      .then((response) => {
-        ctx.replyWithHTML(getText(response.data));
-      })
-      .catch((err) => {
-        logError(err.message);
-        ctx.reply("Country not found");
-      });
+bot.on(message("text"), async (ctx) => {
+  try {
+    if (ctx.message.text.startsWith("/")) {
+      ctx.reply("Bad attempt");
+    } else {
+      const response = await axios.get(apiEndpoint + ctx.message.text);
+      const responseData = response.data;
+      ctx.replyWithHTML(getText(responseData));
+    }
+  } catch (error) {
+    logError(error.message);
+    ctx.reply("Country not found");
   }
 });
 
