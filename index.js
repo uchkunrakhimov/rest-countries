@@ -2,9 +2,8 @@ require("dotenv").config();
 const axios = require("axios");
 const express = require("express");
 const { Telegraf } = require("telegraf");
-const { logError } = require("./logger");
-const { text } = require("./controllers/data");
 const { message } = require("telegraf/filters");
+const { logError, getText } = require("./controllers");
 
 const app = express();
 
@@ -31,7 +30,7 @@ bot.on(message("text"), (ctx) => {
     axios
       .get(process.env.API + ctx.message.text)
       .then((response) => {
-        ctx.replyWithHTML(text(response.data));
+        ctx.replyWithHTML(getText(response.data));
       })
       .catch((err) => {
         logError(err.message);
