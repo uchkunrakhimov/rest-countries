@@ -1,20 +1,11 @@
-# A bot that serves to search for country
+## A bot that helps with searching for countries.
 
-## Installation
+### Run on local machine
 
-```sh
-npm i
+```bash
+npm update && \
+cp .env.example .env && \
+npm run serve
 ```
-
-```sh
-cp .env.example .env
-```
-
-
-## Screen
 
 ![Screen](./screen-result.png)
-
-
-### License
-MIT by Uchkun Rakhimov
